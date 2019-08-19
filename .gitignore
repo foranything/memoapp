@@ -1,6 +1,6 @@
 # frontend and backend dependencies
 frontend/
-backend/
+# backend/
 
 # React dependencies
 */node_modules
