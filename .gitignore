@@ -28,6 +28,7 @@ backend/
 */venv/
 */*.sqlite3
 */*/__pycache__
+*/*/__init__.py
 
 # pycharm dependencies
 .idea/
