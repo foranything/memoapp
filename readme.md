@@ -1,5 +1,6 @@
 ## How to start
 ### 0. branch
+##### branch 변경
 ~~~
 git clone https://github.com/dwnusa/memoapp.git
 git checkout -t remotes/origin/both-dwkim1
