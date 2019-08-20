@@ -1,0 +1,30 @@
+## How to start
+### 1. backend
+##### 경로이동
+~~~
+cd MemoApp/backend
+~~~
+##### 설치 및 서버실행
+~~~
+python --version
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+~~~
+~~~
+python manage.py migrate
+python manage.py runserver
+~~~
+
+### 2. frontend
+##### 경로이동
+~~~
+cd MemoApp/frontend
+~~~
+##### 설치 및 서버실행
+~~~
+yarn install
+yarn add axios
+yarn start
+~~~
+
