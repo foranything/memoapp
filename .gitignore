@@ -28,3 +28,5 @@ backend/
 # Django dependencies
 */venv/
 
+# pycharm dependencies
+.idea/
