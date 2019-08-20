@@ -18,6 +18,7 @@ class App extends Component {
   componentDidMount() {
     this.fetchPostInfo(1);
   }
+
   fetchPostInfo = async postId => {
     this.setState({
       fetching: true // requesting..
@@ -27,7 +28,6 @@ class App extends Component {
         service.getMemo()
       ]);
       info[0].data.map((data, index)=>(
-          // console.log(data),
           this.state.savedNotes[index] = data
       ))
       this.setState({
@@ -40,6 +40,7 @@ class App extends Component {
       });
     }
   };
+
 
   save = (writingState) => {
     const {savedNotes} = this.state
@@ -67,6 +68,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <Writing save={this.save} />
