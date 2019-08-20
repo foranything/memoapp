@@ -1,4 +1,9 @@
 ## How to start
+### 0. branch
+~~~
+git clone https://github.com/dwnusa/memoapp.git
+git checkout -t remotes/origin/both-dwkim1
+~~~
 ### 1. backend
 ##### 경로이동
 ~~~
