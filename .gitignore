@@ -29,6 +29,8 @@ frontend/
 */*.sqlite3
 */*/__pycache__
 */*/__init__.py
+*/*/migrations/*
 
 # pycharm dependencies
 .idea/
+
