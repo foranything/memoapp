@@ -24,9 +24,10 @@ frontend/
 */yarn-debug.log*
 */yarn-error.log*
 
-
 # Django dependencies
 */venv/
+*/*.sqlite3
+*/*/__pycache__
 
 # pycharm dependencies
 .idea/
