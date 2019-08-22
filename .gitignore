@@ -31,7 +31,7 @@
 */*/migrations
 
 # DB dependencies
-# */*.sqlite3
+*/*.sqlite3
 
 # pycharm dependencies
 .idea/
