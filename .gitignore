@@ -26,10 +26,12 @@
 
 # Django dependencies
 */venv/
-*/*.sqlite3
 */*/__pycache__
 */*/__init__.py
-*/*/migrations/*
+*/*/migrations
+
+# DB dependencies
+*/*.sqlite3
 
 # pycharm dependencies
 .idea/
