@@ -29,7 +29,7 @@
 */*.sqlite3
 */*/__pycache__
 */*/__init__.py
-*/*/migrations/*
+*/*/migrations
 
 # pycharm dependencies
 .idea/
