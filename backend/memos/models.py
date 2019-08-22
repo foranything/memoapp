@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 from django.db import models
-from users import models as user_models
+# from users import models as user_models
 
 
 class TimeStampedModel(models.Model):
