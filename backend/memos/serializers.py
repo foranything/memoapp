@@ -21,7 +21,11 @@ class LikeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Like
-        fields = '__all__'
+        fields = (
+            'id',
+            'memo',
+        )
+        # fields = '__all__'
 
 
 class MemoSerializer(serializers.ModelSerializer):
@@ -32,6 +36,7 @@ class MemoSerializer(serializers.ModelSerializer):
         model = models.Memo
         fields = (
             'id',
+            'username',
             'title',
             'content',
             'comments',
