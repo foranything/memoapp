@@ -1,0 +1,50 @@
+﻿<html>
+<head>
+<title>메모장 수정</title>
+</head>
+
+<script language="javascript">
+
+function ErrorCheck()
+{
+    var form = document.modifymemo;
+
+    if (!form.title.value) {
+        alert("제목적어");
+        form.title.focus();
+        return;
+    }
+    if (!form.memo.value) {
+        alert("내용적어");
+        form.memo.focus();
+        return;
+    }
+    form.submit();
+}
+
+function MemoList()
+{
+    location.href = '/update_memo_list?current_page={{cur_page}}';
+}
+
+</script>
+
+<table cellspacing = 0 cellpadding = 5 border = 1 width=500>
+<form name=modifymemo method=post action="/modify_memo/">
+    <input type=hidden name=memo_id  value="{{memo_id}}">
+    <input type=hidden name=current_page  value="{{cur_page}}">
+    <input type=hidden name=search  value="{{search_str}}">
+
+    <tr><td><b>이름</b></td><td>{{ memo_info.nickname }}<input type=hidden name=nickname size=50  maxlength=30 value="{{ memo_info.nickname }}"></td><tr>
+    <tr><td><b>제목</b></td><td><input type=text name=title size=50  maxlength=50 value="{{ memo_info.title }}"></td></tr>
+    <tr><td><b>내용</b></td><td><textarea name=memo cols=50 rows=10>{{ memo_info.memo }}</textarea></td></tr>
+</form>
+</table>
+
+<table  cellspacing = 0 cellpadding = 0 border = 0 width=500>
+    <tr><td>
+        <input type=button value="재등록" OnClick="javascript:ErrorCheck();">
+        <input type=button value="목록" OnClick="javascript:MemoList()">
+    </td></tr>
+</table>
+</html>

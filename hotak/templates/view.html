@@ -1,0 +1,35 @@
+﻿<html>
+<head>
+<title>MEMO</title>
+</head>
+<script language="javascript">
+    function MemoList()
+    {
+        location.href = '/update_memo_list?current_page={{cur_page}}';
+    }
+
+    function MemoModify()
+    {
+        location.href='/view_modify_memo?memo_id={{memo_id}}&current_page={{cur_page}}&search={{search_str}}';
+    }
+
+    function MemoDelete()
+    {
+        location.href='/delete_memo?memo_id={{memo_id}}&current_page={{cur_page}}';
+    }
+</script>
+<table cellspacing = 0 cellpadding = 5 border = 1 width=500>
+    <tr><td><b>조회수</b></td><td> {{ memo_info.hits }} </td></tr>
+    <tr><td><b>이름 </b></td><td> {{ memo_info.nickname }} </td></tr>
+    <tr><td><b>제목 </b></td><td> {{ memo_info.title }} </td></tr>
+    <tr><td><b>내용 </b></td><td width=350> {{ memo_info.memo }} </td></tr>
+</table>
+
+<table cellspacing = 0 cellpadding = 0 border = 0 width=500>
+    <tr><td>
+        <input type=button value="목록" OnClick="javascript:MemoList()">
+        <input type=button value="수정" OnClick="javascript:MemoModify()">
+        <input type=button value="삭제" OnClick="javascript:MemoDelete()">
+    </td></tr>
+</table>
+</html>
