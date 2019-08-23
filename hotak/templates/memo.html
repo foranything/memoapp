@@ -1,0 +1,44 @@
+﻿<script language="javascript">
+    function ErrorCheck()
+    {
+        var form = document.memo_contents;
+  
+        if (!form.nickname.value)
+        {
+            alert("닉네임적어");
+            form.nickname.focus();
+            return;
+        }
+        if (!form.title.value) {
+            alert("제목적어");
+            form.title.focus();
+            return;
+        }
+        if (!form.memo.value) {
+            alert("내용적어");
+            form.memo.focus();
+            return;
+        }
+        form.submit();
+    }
+</script>
+  
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <title>메모장</title>
+    </head>
+    <table width=700 border=1 cellspacing=0 cellpadding=5>
+    <form name=memo_contents method=post action="/add_memo/">
+    <tr><td><b>닉네임</b></td><td><input type=text name=nickname size=50  maxlength=50></td></tr>
+    <tr><td><b>제목</b></td><td><input type=text name=title size=50  maxlength=50></td></tr>
+    <tr><td><b>내용</b></td><td><textarea name=memo cols=50 rows=10></textarea></td></tr>
+    </form>
+    </table>
+  
+    <table width=700 border=1 cellspacing=0 cellpadding=0>
+    <tr><td>
+    <input type=button value="등록" OnClick="javascript:ErrorCheck();">
+    </td></tr>
+    </table>
+    </html>>
