@@ -6,44 +6,112 @@ from rest_framework import status
 
 class MemoList(APIView):
     def get(self, request, format=None):
-        all_memos = models.Memo.objects.all()
+        all_memos = models.Memo.objects.all().order_by('-updated_at')
         serializer = serializers.MemoSerializer(all_memos, many=True)
-        return Response(data=serializer.data)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, format=None):
+        title = request.data['title']
+        content = request.data['content']
+        new_memo = models.Memo.objects.create(
+            title=title,
+            content=content,
+        )
+        new_memo.save()
+        all_memos = models.Memo.objects.all().order_by('-updated_at')
+        serializer = serializers.MemoSerializer(all_memos, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class MemoDetail(APIView):
+    def get(self, request, memo_id, format=None):
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            print('empty')
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        filtered_memos = models.Memo.objects.filter(id=memo_id).order_by('-updated_at')
+        serializer = serializers.MemoSerializer(filtered_memos, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, memo_id, format=None):
+        title = request.data['title']
+        content = request.data['content']
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            print('empty')
+            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
+        else:
+            target_memo[0].id = memo_id
+            target_memo[0].title = title
+            target_memo[0].content = content
+            target_memo[0].save()
+        filtered_memos = models.Memo.objects.filter(id=memo_id).order_by('-updated_at')
+        serializer = serializers.MemoSerializer(filtered_memos, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, memo_id, format=None):
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            print('empty')
+            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
+        target_memo.delete()
+        filtered_memos = models.Memo.objects.filter(id=memo_id).order_by('-updated_at')
+        serializer = serializers.MemoSerializer(filtered_memos, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class CommentList(APIView):
     def get(self, request, memo_id, format=None):
-        print(memo_id)
-        all_comments = models.Comment.objects.filter(memo=memo_id)
-        serializer = serializers.CommentSerializer(all_comments, many=True)
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
+        filtered_comments = models.Comment.objects.filter(memo=memo_id).order_by('-updated_at')
+        serializer = serializers.CommentSerializer(filtered_comments, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, memo_id, format=None):
-        msg = request.data['message']
-        print('Memo_id: ' + str(memo_id) + ' , Comment: ' + str(msg))
-        found_memo = models.Memo.objects.filter(id=memo_id)
-        if not found_memo:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
+        message = request.data['message']
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
         new_comment = models.Comment.objects.create(
-            message=msg,
-            memo=found_memo[0]
+            message=message,
+            memo=target_memo[0],
         )
         new_comment.save()
-        all_comments = models.Comment.objects.filter(memo=memo_id)
-        serializer = serializers.CommentSerializer(all_comments, many=True)
+        filtered_comments = models.Comment.objects.filter(memo=memo_id).order_by('-updated_at')
+        serializer = serializers.CommentSerializer(filtered_comments, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-class CommentDelete(APIView):
+class CommentDetail(APIView):
     def get(self, request, memo_id, comment_id, format=None):
-        print('get comments: ' + str(comment_id) + ' from memo id: '+ str(memo_id))
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
         target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id)
         if not target_comment:
             print('empty')
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(data="comment not found",status=status.HTTP_404_NOT_FOUND)
         serializer = serializers.CommentSerializer(target_comment, many=True)
         return Response(data=serializer.data,  status=status.HTTP_200_OK)
+
+    def put(self, request, memo_id, comment_id, format=None):
+        message = request.data['message']
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
+        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id)
+        if not target_comment:
+            print('empty')
+            return Response(data="comment not found", status=status.HTTP_404_NOT_FOUND)
+        else:
+            target_comment[0].id = comment_id
+            target_comment[0].message = message
+            target_comment[0].save()
+        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id)
+        serializer = serializers.CommentSerializer(target_comment, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, memo_id, comment_id, format=None):
         print('get comments: ' + str(comment_id) + ' from memo id: '+ str(memo_id))
@@ -52,8 +120,8 @@ class CommentDelete(APIView):
             print('empty')
             return Response(status=status.HTTP_404_NOT_FOUND)
         target_comment.delete()
-        all_comments = models.Comment.objects.filter(memo=memo_id)
-        serializer = serializers.CommentSerializer(all_comments, many=True)
+        filtered_comments = models.Comment.objects.filter(memo=memo_id, id=comment_id)
+        serializer = serializers.CommentSerializer(filtered_comments, many=True)
         return Response(status=status.HTTP_202_ACCEPTED, data=serializer.data)
 
 
@@ -64,7 +132,15 @@ class LikeList(APIView):
         serializer = serializers.LikeSerializer(all_likes, many=True)
         return Response(data=serializer.data)
 
-    def post(self, request, memo_id, format=None):
+
+class LikeDetail(APIView):
+    def get(self, request, memo_id, like_id, format=None):
+        print(memo_id)
+        all_likes = models.Like.objects.filter(memo=memo_id)
+        serializer = serializers.LikeSerializer(all_likes, many=True)
+        return Response(data=serializer.data)
+
+    def post(self, request, memo_id, like_id, format=None):
         print('Like:' + str(memo_id))
         try:
             found_memo = models.Memo.objects.get(id=memo_id)
@@ -78,7 +154,7 @@ class LikeList(APIView):
         serializer = serializers.LikeSerializer(all_likes, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    def delete(self, request, memo_id, format=None):
+    def delete(self, request, memo_id, like_id, format=None):
         print('Unlike:' + str(memo_id))
 
         try:

@@ -8,7 +8,12 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Comment
-        fields = '__all__'
+        fields = (
+            'id',
+            'message',
+            'memo',
+        )
+        # fields = '__all__'
 
 
 class LikeSerializer(serializers.ModelSerializer):
