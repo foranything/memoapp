@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
     'rest_framework',
     'corsheaders',
     'memos',
-    'users',
+    # 'users',
 ]
 
 MIDDLEWARE = [
@@ -127,4 +130,4 @@ STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-AUTH_USER_MODEL = 'users.User'
+# AUTH_USER_MODEL = 'users.User'
