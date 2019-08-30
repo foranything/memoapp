@@ -101,18 +101,44 @@ class TestCommentList(TestCase):
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # def test_PUT_request(self):
-    #     response = self.client.put("/api/v1/memos/1/",
-    #                             data={"username": "dwnusa",
-    #                                "title": "ABCDEF",
-    #                                "content": "Hello world ABCDEF"},
-    #                             content_type="application/json")
-    #     memos = Memo.objects.filter(pk=1).order_by("-updated_at")
-    #     serializer = MemoSerializer(memos, many=True)
-    #     self.assertEqual(response.data, serializer.data)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #
-    # def test_DELETE_request(self):
-    #     response = self.client.delete("/api/v1/memos/1/")
-    #     self.assertEqual(response.data, [])
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+class TestCommentDetail(TestCase):
+    def setUp(self):
+        memo1 = Memo.objects.create(
+            username="dwnusa", title="ABC", content="Hello world ABC")
+        memo2 = Memo.objects.create(
+            username="hotak", title="abc", content="Hello world abc")
+        Comment.objects.create(
+            message="ABC's comment!", memo=memo1)
+        Comment.objects.create(
+            message="comment2 for ABC!", memo=memo1)
+        Comment.objects.create(
+            message="abc's comment!", memo=memo2)
+        Comment.objects.create(
+            message="abc's comment!", memo=memo2)
+        Comment.objects.create(
+            message="abc's comment!", memo=memo2)
+
+    def test_GET_request(self):
+        response = client.get("/api/v1/memos/1/comments/1/")
+        filtered_comment = Comment.objects.filter(pk=1,memo=1).order_by("-updated_at")
+        serializer = CommentSerializer(filtered_comment, many=True)
+        # print(response.data)
+        # print(serializer.data)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_PUT_request(self):
+        response = self.client.put("/api/v1/memos/1/comments/1/",
+                                   data={"message": "update dwnusa"},
+                                   content_type="application/json")
+        comment = Comment.objects.filter(pk=1, memo=1).order_by("-updated_at")
+        serializer = CommentSerializer(comment, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_DELETE_request(self):
+        response = self.client.delete("/api/v1/memos/1/comments/1/")
+        self.assertEqual(response.data, [])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
