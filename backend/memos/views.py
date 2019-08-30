@@ -20,8 +20,11 @@ class MemoList(APIView):
             content=content,
         )
         new_memo.save()
-        all_memos = models.Memo.objects.all().order_by('-updated_at')
-        serializer = serializers.MemoSerializer(all_memos, many=True)
+        filtered_memos = models.Memo.objects.filter(
+            username=username,
+            title=title,
+            content=content).order_by('-updated_at')
+        serializer = serializers.MemoSerializer(filtered_memos, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
