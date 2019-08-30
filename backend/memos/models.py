@@ -3,7 +3,8 @@ from django.db import models
 # Create your models here.
 
 from django.db import models
-# from users import models as user_models
+# from django.contrib.auth.models import AbstractUser
+# from users import models as user_models50)
 
 
 class TimeStampedModel(models.Model):
@@ -15,7 +16,7 @@ class TimeStampedModel(models.Model):
 
 
 class Memo(TimeStampedModel):
-    # creator = models.ForeignKey(user_models.User, null=True, on_delete=models.PROTECT)
+    username = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
     content = models.TextField()
 
@@ -25,7 +26,6 @@ class Memo(TimeStampedModel):
 
 
 class Comment(TimeStampedModel):
-    # creator = models.ForeignKey(user_models.User, null=True, on_delete=models.PROTECT)
     message = models.TextField()
     memo = models.ForeignKey(Memo, on_delete=models.CASCADE, null=True, related_name='comments')
 
@@ -34,7 +34,6 @@ class Comment(TimeStampedModel):
 
 
 class Like(TimeStampedModel):
-    # creator = models.ForeignKey(user_models.User, null=True, on_delete=models.PROTECT)
     memo = models.ForeignKey(Memo, on_delete=models.CASCADE, null=True, related_name='likes')
 
     def __str__(self):

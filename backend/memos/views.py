@@ -11,9 +11,11 @@ class MemoList(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
+        username = request.data['username']
         title = request.data['title']
         content = request.data['content']
         new_memo = models.Memo.objects.create(
+            username=username,
             title=title,
             content=content,
         )
@@ -25,7 +27,7 @@ class MemoList(APIView):
 
 class MemoDetail(APIView):
     def get(self, request, memo_id, format=None):
-        target_memo = models.Memo.objects.filter(id=memo_id)
+        target_memo = models.Memo.objects.filter(id=memo_id).order_by('-updated_at')
         if not target_memo:
             print('empty')
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -36,7 +38,7 @@ class MemoDetail(APIView):
     def put(self, request, memo_id, format=None):
         title = request.data['title']
         content = request.data['content']
-        target_memo = models.Memo.objects.filter(id=memo_id)
+        target_memo = models.Memo.objects.filter(id=memo_id).order_by('-updated_at')
         if not target_memo:
             print('empty')
             return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
@@ -89,7 +91,7 @@ class CommentDetail(APIView):
         target_memo = models.Memo.objects.filter(id=memo_id)
         if not target_memo:
             return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
-        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id)
+        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id).order_by('-updated_at')
         if not target_comment:
             print('empty')
             return Response(data="comment not found",status=status.HTTP_404_NOT_FOUND)
@@ -101,7 +103,7 @@ class CommentDetail(APIView):
         target_memo = models.Memo.objects.filter(id=memo_id)
         if not target_memo:
             return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
-        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id)
+        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id).order_by('-updated_at')
         if not target_comment:
             print('empty')
             return Response(data="comment not found", status=status.HTTP_404_NOT_FOUND)
@@ -109,7 +111,7 @@ class CommentDetail(APIView):
             target_comment[0].id = comment_id
             target_comment[0].message = message
             target_comment[0].save()
-        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id)
+        target_comment = models.Comment.objects.filter(memo=memo_id, id=comment_id).order_by('-updated_at')
         serializer = serializers.CommentSerializer(target_comment, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -120,16 +122,13 @@ class CommentDetail(APIView):
             print('empty')
             return Response(status=status.HTTP_404_NOT_FOUND)
         target_comment.delete()
-        filtered_comments = models.Comment.objects.filter(memo=memo_id, id=comment_id)
+        filtered_comments = models.Comment.objects.filter(memo=memo_id, id=comment_id).order_by('-updated_at')
         serializer = serializers.CommentSerializer(filtered_comments, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class LikeList(APIView):
     def get(self, request, memo_id, format=None):
-        target_memo = models.Memo.objects.filter(id=memo_id)
-        if not target_memo:
-            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
         filtered_likes = models.Like.objects.filter(memo=memo_id)
         serializer = serializers.LikeSerializer(filtered_likes, many=True)
         return Response(data=serializer.data)
@@ -146,42 +145,50 @@ class LikeList(APIView):
         serializer = serializers.LikeSerializer(filtered_likes, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self, request, memo_id, format=None):
+        target_memo = models.Memo.objects.filter(id=memo_id)
+        if not target_memo:
+            return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
+        target_like = models.Like.objects.filter(memo=memo_id).order_by('updated_at')
+        if not target_like:
+            print('empty')
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        target_like[0].delete()
+        filtered_likes = models.Like.objects.filter(memo=memo_id).order_by('-updated_at')
+        serializer = serializers.LikeSerializer(filtered_likes, many=True)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
+
 
 class LikeDetail(APIView):
     def get(self, request, memo_id, like_id, format=None):
         target_memo = models.Memo.objects.filter(id=memo_id)
         if not target_memo:
             return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
-        target_like = models.Like.objects.filter(memo=memo_id, id=like_id)
-        if not target_like:
-            print('empty')
-            return Response(data="like not found",status=status.HTTP_404_NOT_FOUND)
-        serializer = serializers.LikeSerializer(target_like, many=True)
-        return Response(data=serializer.data,  status=status.HTTP_200_OK)
+        filtered_likes = models.Like.objects.filter(memo=memo_id).order_by('-updated_at')
+        serializer = serializers.LikeSerializer(filtered_likes, many=True)
+        return Response(data=serializer.data)
 
     def put(self, request, memo_id, like_id, format=None):
         target_memo = models.Memo.objects.filter(id=memo_id)
         if not target_memo:
             return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
-        target_like = models.Like.objects.filter(memo=memo_id, id=like_id)
+        target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
         if not target_like:
+            print('empty')
             return Response(data="like not found", status=status.HTTP_404_NOT_FOUND)
         else:
-            target_like[0].id = like_id
-            target_like[0].memo = target_memo[0]
             target_like[0].save()
-        target_like = models.Like.objects.filter(memo=memo_id, id=like_id)
+        target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
         serializer = serializers.LikeSerializer(target_like, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, memo_id, like_id, format=None):
         print('get likes: ' + str(like_id) + ' from memo id: '+ str(memo_id))
-        target_like = models.Like.objects.filter(memo=memo_id, id=like_id)
+        target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('updated_at')
         if not target_like:
             print('empty')
             return Response(status=status.HTTP_404_NOT_FOUND)
         target_like.delete()
-        filtered_likes = models.Like.objects.filter(memo=memo_id, id=like_id)
+        filtered_likes = models.Like.objects.filter(memo=memo_id).order_by('-updated_at')
         serializer = serializers.LikeSerializer(filtered_likes, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
