@@ -132,9 +132,9 @@ class CommentDetail(APIView):
 
 class LikeList(APIView):
     def get(self, request, memo_id, format=None):
-        filtered_likes = models.Like.objects.filter(memo=memo_id)
+        filtered_likes = models.Like.objects.filter(memo=memo_id).order_by("-updated_at")
         serializer = serializers.LikeSerializer(filtered_likes, many=True)
-        return Response(data=serializer.data)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, memo_id, format=None):
         target_memo = models.Memo.objects.filter(id=memo_id)
@@ -159,7 +159,7 @@ class LikeList(APIView):
         target_like[0].delete()
         filtered_likes = models.Like.objects.filter(memo=memo_id).order_by('-updated_at')
         serializer = serializers.LikeSerializer(filtered_likes, many=True)
-        return Response(data=serializer.data,status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class LikeDetail(APIView):
@@ -167,31 +167,33 @@ class LikeDetail(APIView):
         target_memo = models.Memo.objects.filter(id=memo_id)
         if not target_memo:
             return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
-        filtered_likes = models.Like.objects.filter(memo=memo_id).order_by('-updated_at')
+        filtered_likes = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
         serializer = serializers.LikeSerializer(filtered_likes, many=True)
-        return Response(data=serializer.data)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, memo_id, like_id, format=None):
+    # def put(self, request, memo_id, like_id, format=None):
+    #     target_memo = models.Memo.objects.filter(id=memo_id)
+    #     if not target_memo:
+    #         return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
+    #     target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
+    #     if not target_like:
+    #         print('empty')
+    #         return Response(data="like not found", status=status.HTTP_404_NOT_FOUND)
+    #     else:
+    #         target_like[0].save()
+    #     target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
+    #     serializer = serializers.LikeSerializer(target_like, many=True)
+    #     return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, memo_id, like_id, format=None):
         target_memo = models.Memo.objects.filter(id=memo_id)
         if not target_memo:
             return Response(data="memo not found", status=status.HTTP_404_NOT_FOUND)
-        target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
-        if not target_like:
-            print('empty')
-            return Response(data="like not found", status=status.HTTP_404_NOT_FOUND)
-        else:
-            target_like[0].save()
-        target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
-        serializer = serializers.LikeSerializer(target_like, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, memo_id, like_id, format=None):
-        print('get likes: ' + str(like_id) + ' from memo id: '+ str(memo_id))
         target_like = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('updated_at')
         if not target_like:
             print('empty')
             return Response(status=status.HTTP_404_NOT_FOUND)
         target_like.delete()
-        filtered_likes = models.Like.objects.filter(memo=memo_id).order_by('-updated_at')
+        filtered_likes = models.Like.objects.filter(memo=memo_id, id=like_id).order_by('-updated_at')
         serializer = serializers.LikeSerializer(filtered_likes, many=True)
-        return Response(data=serializer.data,status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -64,7 +64,9 @@ class TestMemoDetail(TestCase):
 
     def test_DELETE_request(self):
         response = self.client.delete("/api/v1/memos/1/")
-        self.assertEqual(response.data, [])
+        memo = Memo.objects.filter(id=1).order_by("-updated_at")
+        serializer = MemoSerializer(memo, many=True)
+        self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
@@ -139,6 +141,69 @@ class TestCommentDetail(TestCase):
 
     def test_DELETE_request(self):
         response = self.client.delete("/api/v1/memos/1/comments/1/")
-        self.assertEqual(response.data, [])
+        comment = Comment.objects.filter(memo=1, id=1).order_by("-updated_at")
+        serializer = CommentSerializer(comment, many=True)
+        self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+class TestLikeList(TestCase):
+    def setUp(self):
+        memo1 = Memo.objects.create(
+            username="dwnusa", title="ABC", content="Hello world ABC")
+        memo2 = Memo.objects.create(
+            username="hotak", title="abc", content="Hello world abc")
+        Like.objects.create(memo=memo1)
+        Like.objects.create(memo=memo1)
+        Like.objects.create(memo=memo2)
+        Like.objects.create(memo=memo2)
+        Like.objects.create(memo=memo2)
+
+    def test_GET_request(self):
+        response = client.get("/api/v1/memos/2/likes/")
+        filtered_like = Like.objects.filter(memo=2).order_by("-updated_at")
+        serializer = LikeSerializer(filtered_like, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_POST_request(self):
+        response = self.client.post("/api/v1/memos/1/likes/",
+                             data={"memo": 1})
+        like = Like.objects.filter(memo=1).order_by("-updated_at")
+        serializer = LikeSerializer(like, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_DELETE_request(self):
+        response = self.client.delete("/api/v1/memos/1/likes/")
+        like = Like.objects.filter(memo=1).order_by("-updated_at")
+        serializer = LikeSerializer(like, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class TestLikeDetail(TestCase):
+    def setUp(self):
+        memo1 = Memo.objects.create(
+            username="dwnusa", title="ABC", content="Hello world ABC")
+        memo2 = Memo.objects.create(
+            username="hotak", title="abc", content="Hello world abc")
+        Like.objects.create(memo=memo1)
+        Like.objects.create(memo=memo1)
+        Like.objects.create(memo=memo2)
+        Like.objects.create(memo=memo2)
+        Like.objects.create(memo=memo2)
+
+    def test_GET_request(self):
+        response = client.get("/api/v1/memos/2/likes/1/")
+        filtered_like = Like.objects.filter(memo=2, id=1).order_by("-updated_at")
+        serializer = LikeSerializer(filtered_like, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_DELETE_request(self):
+        response = self.client.delete("/api/v1/memos/1/likes/1/")
+        like = Like.objects.filter(memo=1, id=1).order_by("-updated_at")
+        serializer = LikeSerializer(like, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
