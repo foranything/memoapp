@@ -84,7 +84,7 @@ class CommentList(APIView):
             memo=target_memo[0],
         )
         new_comment.save()
-        filtered_comments = models.Comment.objects.filter(memo=memo_id).order_by('-updated_at')
+        filtered_comments = models.Comment.objects.filter(message=message, memo=memo_id).order_by('-updated_at')
         serializer = serializers.CommentSerializer(filtered_comments, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 

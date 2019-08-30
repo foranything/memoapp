@@ -2,8 +2,8 @@ from django.test import TestCase, Client
 from django.urls import resolve, reverse
 from django.http import HttpRequest
 import json
-from ..serializers import MemoSerializer
-from ..models import Memo
+from ..serializers import MemoSerializer, CommentSerializer, LikeSerializer
+from ..models import Memo, Comment, Like
 from rest_framework import status
 from ..views import MemoList
 
@@ -12,35 +12,107 @@ from ..views import MemoList
 client = Client()
 
 
-class Test_MemoList(TestCase):
+class TestMemoList(TestCase):
     def setUp(self):
         Memo.objects.create(
-            username='dwnusa', title='ABC', content='Hello world ABC')
+            username="dwnusa", title="ABC", content="Hello world ABC")
         Memo.objects.create(
-            username='hotak', title='abc', content='Hello world abc')
+            username="hotak", title="abc", content="Hello world abc")
 
-    def test_root_url_resolves_to_MemoList_view(self):
-        response = client.get('/api/v1/memos/')
-        # response = client.get(reverse('MemoList'))
-        memos = Memo.objects.all().order_by('-updated_at')
+    def test_GET_request(self):
+        response = client.get("/api/v1/memos/")
+        memos = Memo.objects.all().order_by("-updated_at")
         serializer = MemoSerializer(memos, many=True)
-        # print(response.data)
-        # print('\n')
-        # print(serializer.data)
-        # print(response.data == serializer.data)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_can_save_a_POST_request(self):
-        response = self.client.post('/api/v1/memos/',
-                             data={'username': 'jlkinspection',
-                                   'title': '123',
-                                   'content': 'Hello world 123'})
-        memos = Memo.objects.filter(username='jlkinspection').order_by('-updated_at')
+    def test_POST_request(self):
+        response = self.client.post("/api/v1/memos/",
+                             data={"username": "jlkinspection",
+                                   "title": "123",
+                                   "content": "Hello world 123"})
+        memos = Memo.objects.filter(username="jlkinspection").order_by("-updated_at")
         serializer = MemoSerializer(memos, many=True)
-        # print(response.data)
-        # print('\n')
-        # print(serializer.data)
-        # print(response.data == serializer.data)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class TestMemoDetail(TestCase):
+    def setUp(self):
+        Memo.objects.create(
+            username="dwnusa", title="ABC", content="Hello world ABC")
+        Memo.objects.create(
+            username="hotak", title="abc", content="Hello world abc")
+
+    def test_GET_request(self):
+        response = client.get("/api/v1/memos/1/")
+        filtered_memo = Memo.objects.filter(pk=1).order_by("-updated_at")
+        serializer = MemoSerializer(filtered_memo, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_PUT_request(self):
+        response = self.client.put("/api/v1/memos/1/",
+                                data={"username": "dwnusa",
+                                   "title": "ABCDEF",
+                                   "content": "Hello world ABCDEF"},
+                                content_type="application/json")
+        memos = Memo.objects.filter(pk=1).order_by("-updated_at")
+        serializer = MemoSerializer(memos, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_DELETE_request(self):
+        response = self.client.delete("/api/v1/memos/1/")
+        self.assertEqual(response.data, [])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class TestCommentList(TestCase):
+    def setUp(self):
+        memo1 = Memo.objects.create(
+            username="dwnusa", title="ABC", content="Hello world ABC")
+        memo2 = Memo.objects.create(
+            username="hotak", title="abc", content="Hello world abc")
+        Comment.objects.create(
+            message="ABC's comment!", memo=memo1)
+        Comment.objects.create(
+            message="comment2 for ABC!", memo=memo1)
+        Comment.objects.create(
+            message="abc's comment!", memo=memo2)
+        Comment.objects.create(
+            message="abc's comment!", memo=memo2)
+        Comment.objects.create(
+            message="abc's comment!", memo=memo2)
+
+    def test_GET_request(self):
+        response = client.get("/api/v1/memos/2/comments/")
+        filtered_comment = Comment.objects.filter(memo=2).order_by("-updated_at")
+        serializer = CommentSerializer(filtered_comment, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_POST_request(self):
+        response = self.client.post("/api/v1/memos/1/comments/",
+                             data={"message": "message from jlkinspection",
+                                   "memo": 1})
+        comment = Comment.objects.filter(message="message from jlkinspection").order_by("-updated_at")
+        serializer = CommentSerializer(comment, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    # def test_PUT_request(self):
+    #     response = self.client.put("/api/v1/memos/1/",
+    #                             data={"username": "dwnusa",
+    #                                "title": "ABCDEF",
+    #                                "content": "Hello world ABCDEF"},
+    #                             content_type="application/json")
+    #     memos = Memo.objects.filter(pk=1).order_by("-updated_at")
+    #     serializer = MemoSerializer(memos, many=True)
+    #     self.assertEqual(response.data, serializer.data)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    # def test_DELETE_request(self):
+    #     response = self.client.delete("/api/v1/memos/1/")
+    #     self.assertEqual(response.data, [])
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
