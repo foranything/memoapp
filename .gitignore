@@ -25,14 +25,14 @@
 */yarn-error.log*
 
 # Django dependencies
-*/venv/
-*/*/__pycache__
-*/*/__init__.py
-*/*/migrations
+venv/
+
 
 # DB dependencies
-*/*.sqlite3
+db.sqlite3
+
 
 # pycharm dependencies
 .idea/
-
+*.pyc
+__pycache__
