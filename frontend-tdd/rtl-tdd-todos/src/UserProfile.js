@@ -4,7 +4,6 @@ import axios from 'axios';
 const UserProfile = ({ id }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
-  
   const getUser = async id => {
     setLoading(true);
     try {
@@ -17,7 +16,6 @@ const UserProfile = ({ id }) => {
     }
     setLoading(false);
   };
-  
   useEffect(() => {
     getUser(id);
   }, [id]);
