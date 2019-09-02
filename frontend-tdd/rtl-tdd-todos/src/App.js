@@ -1,5 +1,5 @@
 import React from 'react';
-import TodoForm from './TodoForm'
+import TodoApp from './TodoApp'
 import TodoItem from './TodoItem'
 import './App.css';
 
@@ -7,7 +7,7 @@ function App() {
   
   return (
     <div>
-      <TodoForm/>
+      <TodoApp/>
       {/*<TodoItem/>*/}
     </div>
   );
