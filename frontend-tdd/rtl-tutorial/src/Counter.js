@@ -1,10 +1,9 @@
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 
-const HookCounter = () => {
-  
+const Counter = () => {
   const [number, setNumber] = useState(0);
   
-  const onIncrease = useCallback(()=> {
+  const onIncrease = useCallback(() => {
     setNumber(number + 1);
   }, [number]);
   
@@ -18,6 +17,7 @@ const HookCounter = () => {
       <button onClick={onIncrease}>+1</button>
       <button onClick={onDecrease}>-1</button>
     </div>
-  )
-}
-export default HookCounter;
+  );
+};
+
+export default Counter;
