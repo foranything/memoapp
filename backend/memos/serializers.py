@@ -36,7 +36,7 @@ class MemoSerializer(serializers.ModelSerializer):
         model = models.Memo
         fields = (
             'id',
-            'username',
+            'password',
             'title',
             'content',
             'comments',

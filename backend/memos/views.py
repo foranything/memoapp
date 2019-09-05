@@ -11,17 +11,17 @@ class MemoList(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        username = request.data['username']
+        password = request.data['password']
         title = request.data['title']
         content = request.data['content']
         new_memo = models.Memo.objects.create(
-            username=username,
+            password=password,
             title=title,
             content=content,
         )
         new_memo.save()
         filtered_memos = models.Memo.objects.filter(
-            username=username,
+            password=password,
             title=title,
             content=content).order_by('-updated_at')
         serializer = serializers.MemoSerializer(filtered_memos, many=True)

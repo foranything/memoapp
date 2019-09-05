@@ -16,15 +16,15 @@ class TimeStampedModel(models.Model):
 
 
 class Memo(TimeStampedModel):
-    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
     content = models.TextField()
 
     def get_title_content(self):
-        return self.username + ' has title : ' + self.title + ', and content : ' + self.content
+        return self.password + ' has title : ' + self.title + ', and content : ' + self.content
 
     def __str__(self):
-        return '{} : {} : {}'.format(self.username, self.title, self.content)
+        return '{} : {} : {}'.format(self.password, self.title, self.content)
         # return self.title + "  -  " + self.content
 
 

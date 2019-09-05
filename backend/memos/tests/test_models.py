@@ -7,13 +7,13 @@ class MemoTest(TestCase):
 
     def setUp(self):
         Memo.objects.create(
-            username='dwnusa', title='ABC', content='Hello world ABC')
+            password='dwnusa', title='ABC', content='Hello world ABC')
         Memo.objects.create(
-            username='hotak', title='abc', content='Hello world abc')
+            password='hotak', title='abc', content='Hello world abc')
 
     def test_title_content(self):
-        memo_dwnusa = Memo.objects.get(username='dwnusa')
-        memo_hotak = Memo.objects.get(username='hotak')
+        memo_dwnusa = Memo.objects.get(password='dwnusa')
+        memo_hotak = Memo.objects.get(password='hotak')
         self.assertEqual(
             memo_dwnusa.get_title_content(), "dwnusa has title : ABC, and content : Hello world ABC")
         self.assertEqual(
@@ -25,12 +25,12 @@ class CommentTest(TestCase):
 
     def setUp(self):
         Memo.objects.create(
-            username='dwnusa', title='ABC', content='Hello world ABC')
-        self.memo_dwnusa = Memo.objects.get(username='dwnusa')
+            password='dwnusa', title='ABC', content='Hello world ABC')
+        self.memo_dwnusa = Memo.objects.get(password='dwnusa')
 
         Memo.objects.create(
-            username='hotak', title='abc', content='Hello world abc')
-        self.memo_hotak = Memo.objects.get(username='hotak')
+            password='hotak', title='abc', content='Hello world abc')
+        self.memo_hotak = Memo.objects.get(password='hotak')
 
         Comment.objects.create(
             message='hello dwnusa1', memo=self.memo_dwnusa) # comment id: 1
@@ -67,12 +67,12 @@ class LikeTest(TestCase):
 
     def setUp(self):
         Memo.objects.create(
-            username='dwnusa', title='ABC', content='Hello world ABC')
-        self.memo_dwnusa = Memo.objects.get(username='dwnusa')
+            password='dwnusa', title='ABC', content='Hello world ABC')
+        self.memo_dwnusa = Memo.objects.get(password='dwnusa')
 
         Memo.objects.create(
-            username='hotak', title='abc', content='Hello world abc')
-        self.memo_hotak = Memo.objects.get(username='hotak')
+            password='hotak', title='abc', content='Hello world abc')
+        self.memo_hotak = Memo.objects.get(password='hotak')
 
         Like.objects.create(
             memo=self.memo_dwnusa) # like id: 1

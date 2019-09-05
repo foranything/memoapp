@@ -6,8 +6,8 @@ class NoteList extends Component {
     const {notes} = this.props;
     return (
       <div className='NoteList'>
-        {notes.map((note, index) =>
-          <Note index={index} username={note.username} title={note.title} content={note.content} key={note.id}/>)}
+        {notes.reverse().map((note, index) =>
+          <Note username={note.username} title={note.title} content={note.content} key={index}/>)}
       </div>
     );
   }

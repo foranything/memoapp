@@ -15,9 +15,9 @@ client = Client()
 class TestMemoList(TestCase):
     def setUp(self):
         Memo.objects.create(
-            username="dwnusa", title="ABC", content="Hello world ABC")
+            password="dwnusa", title="ABC", content="Hello world ABC")
         Memo.objects.create(
-            username="hotak", title="abc", content="Hello world abc")
+            password="hotak", title="abc", content="Hello world abc")
 
     def test_GET_request(self):
         response = client.get("/api/v1/memos/")
@@ -28,10 +28,10 @@ class TestMemoList(TestCase):
 
     def test_POST_request(self):
         response = self.client.post("/api/v1/memos/",
-                             data={"username": "jlkinspection",
+                             data={"password": "jlkinspection",
                                    "title": "123",
                                    "content": "Hello world 123"})
-        memos = Memo.objects.filter(username="jlkinspection").order_by("-updated_at")
+        memos = Memo.objects.filter(password="jlkinspection").order_by("-updated_at")
         serializer = MemoSerializer(memos, many=True)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -40,9 +40,9 @@ class TestMemoList(TestCase):
 class TestMemoDetail(TestCase):
     def setUp(self):
         Memo.objects.create(
-            username="dwnusa", title="ABC", content="Hello world ABC")
+            password="dwnusa", title="ABC", content="Hello world ABC")
         Memo.objects.create(
-            username="hotak", title="abc", content="Hello world abc")
+            password="hotak", title="abc", content="Hello world abc")
 
     def test_GET_request(self):
         response = client.get("/api/v1/memos/1/")
@@ -53,7 +53,7 @@ class TestMemoDetail(TestCase):
 
     def test_PUT_request(self):
         response = self.client.put("/api/v1/memos/1/",
-                                data={"username": "dwnusa",
+                                data={"password": "dwnusa",
                                    "title": "ABCDEF",
                                    "content": "Hello world ABCDEF"},
                                 content_type="application/json")
@@ -73,9 +73,9 @@ class TestMemoDetail(TestCase):
 class TestCommentList(TestCase):
     def setUp(self):
         memo1 = Memo.objects.create(
-            username="dwnusa", title="ABC", content="Hello world ABC")
+            password="dwnusa", title="ABC", content="Hello world ABC")
         memo2 = Memo.objects.create(
-            username="hotak", title="abc", content="Hello world abc")
+            password="hotak", title="abc", content="Hello world abc")
         Comment.objects.create(
             message="ABC's comment!", memo=memo1)
         Comment.objects.create(
@@ -107,9 +107,9 @@ class TestCommentList(TestCase):
 class TestCommentDetail(TestCase):
     def setUp(self):
         memo1 = Memo.objects.create(
-            username="dwnusa", title="ABC", content="Hello world ABC")
+            password="dwnusa", title="ABC", content="Hello world ABC")
         memo2 = Memo.objects.create(
-            username="hotak", title="abc", content="Hello world abc")
+            password="hotak", title="abc", content="Hello world abc")
         Comment.objects.create(
             message="ABC's comment!", memo=memo1)
         Comment.objects.create(
@@ -150,9 +150,9 @@ class TestCommentDetail(TestCase):
 class TestLikeList(TestCase):
     def setUp(self):
         memo1 = Memo.objects.create(
-            username="dwnusa", title="ABC", content="Hello world ABC")
+            password="dwnusa", title="ABC", content="Hello world ABC")
         memo2 = Memo.objects.create(
-            username="hotak", title="abc", content="Hello world abc")
+            password="hotak", title="abc", content="Hello world abc")
         Like.objects.create(memo=memo1)
         Like.objects.create(memo=memo1)
         Like.objects.create(memo=memo2)
@@ -185,9 +185,9 @@ class TestLikeList(TestCase):
 class TestLikeDetail(TestCase):
     def setUp(self):
         memo1 = Memo.objects.create(
-            username="dwnusa", title="ABC", content="Hello world ABC")
+            password="dwnusa", title="ABC", content="Hello world ABC")
         memo2 = Memo.objects.create(
-            username="hotak", title="abc", content="Hello world abc")
+            password="hotak", title="abc", content="Hello world abc")
         Like.objects.create(memo=memo1)
         Like.objects.create(memo=memo1)
         Like.objects.create(memo=memo2)

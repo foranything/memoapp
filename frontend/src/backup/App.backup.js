@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import * as service from "../services/memo";
+import * as service from "./services/noteAPI";
 import WritingBackup from "./Writing.backup";
 import NoteBackup from "./Note.backup";
 

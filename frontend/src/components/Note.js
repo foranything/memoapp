@@ -3,7 +3,7 @@ import "./Note.css"
 
 class Note extends Component {
   render() {
-    const {username, title, content, index} = this.props;
+    const {username, title, content} = this.props;
     return (
       <div className='Note col s12 m4 l3'>
         <div className='DeleteBtn'>
