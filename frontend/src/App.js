@@ -1,89 +1,14 @@
-import React, {Component} from "react"
-import * as service from "./services/memo";
-import Writing from "./Writing"
-import Note from "./Note"
+import React, {Component} from 'react';
+import NoteApp from './components/NoteApp'
+import "./App.css"
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      fetching: false,
-      savedNotes: [
-        {userId: 'anonymous', id: 0, title: "title1", content: "default1"},
-        {userId: 'anonymous', id: 1, title: "title2", content: "default2"},
-        {userId: 'anonymous', id: 2, title: "title3", content: "default3"}
-      ]
-    }
-  }
-  componentDidMount() {
-    this.fetchPostInfo(1);
-  }
-  fetchPostInfo = async postId => {
-    this.setState({
-      fetching: true // requesting..
-    });
-    try {
-      const info = await Promise.all([
-        service.getMemo()
-      ]);
-      info[0].data.map((data, index)=>(
-          // console.log(data),
-          this.state.savedNotes[index] = data
-      ))
-      this.setState({
-        fetching: false // done!
-      });
-    } catch (e) {
-      // if err, stop at this point
-      this.setState({
-        fetching: false
-      });
-    }
-  };
-
-  save = (writingState) => {
-    const {savedNotes} = this.state
-    const lastNoteId = savedNotes[savedNotes.length - 1].id
-
-    this.setState({
-      savedNotes: [
-        ...savedNotes,
-        {
-          id: lastNoteId + 1,
-          title: writingState.title,
-          content: writingState.content
-        }
-      ]
-    })
-  }
-
-  delete = (index) => {
-    console.log(`${index} will be deleted`)
-    const {savedNotes} = this.state
-    savedNotes.splice(index, 1)
-    this.setState({
-      savedNotes: savedNotes
-    })
-  }
-
   render() {
     return (
-      <div>
-        <Writing save={this.save} />
-        <div className='row'>
-          {this.state.savedNotes.map((note, index) => (
-            <Note
-              delete={this.delete}
-              title={note.title}
-              content={note.content}
-              index={index}
-              key={note.id}
-            />
-          ))}
-        </div>
+      <div className="row">
+        <NoteApp />
       </div>
-    )
+    );
   }
 }
-
-export default App
+export default App;

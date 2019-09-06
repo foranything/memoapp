@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Note /> renders Note 1`] = `
+<div>
+  <div
+    class="Note col s12 m4 l3"
+  >
+    <div
+      class="DeleteBtn"
+    />
+    <div
+      class="card yellow lighten-4"
+    >
+      <div
+        class="card-content black-text"
+      >
+        <span
+          class="card-title"
+        >
+          제목
+        </span>
+        <p>
+          내용
+        </p>
+        <p>
+          김대운
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<NoteList /> renders NoteList 1`] = `
+<div>
+  <div
+    class="NoteList"
+  >
+    <div
+      class="Note col s12 m4 l3"
+    >
+      <div
+        class="DeleteBtn"
+      />
+      <div
+        class="card yellow lighten-4"
+      >
+        <div
+          class="card-content black-text"
+        >
+          <span
+            class="card-title"
+          >
+            title3
+          </span>
+          <p>
+            content3
+          </p>
+          <p>
+            user3
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Note col s12 m4 l3"
+    >
+      <div
+        class="DeleteBtn"
+      />
+      <div
+        class="card yellow lighten-4"
+      >
+        <div
+          class="card-content black-text"
+        >
+          <span
+            class="card-title"
+          >
+            title2
+          </span>
+          <p>
+            content2
+          </p>
+          <p>
+            user2
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Note col s12 m4 l3"
+    >
+      <div
+        class="DeleteBtn"
+      />
+      <div
+        class="card yellow lighten-4"
+      >
+        <div
+          class="card-content black-text"
+        >
+          <span
+            class="card-title"
+          >
+            title1
+          </span>
+          <p>
+            content1
+          </p>
+          <p>
+            user1
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<NoteWriter /> renders NoteWriter 1`] = `
+<div>
+  <form
+    class="NoteWriter"
+  >
+    <input
+      name="title"
+      placeholder="제목을 입력하세요."
+      value=""
+    />
+    <input
+      name="content"
+      placeholder="내용을 입력하세요."
+      value=""
+    />
+    <input
+      name="password"
+      placeholder="비밀번호를 입력하세요."
+      type="password"
+      value=""
+    />
+    <button
+      type="submit"
+    >
+      등록
+    </button>
+  </form>
+</div>
+`;

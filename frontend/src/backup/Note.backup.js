@@ -1,8 +1,8 @@
 import React, {Component} from "react"
-import "./note.css"
+import "./note.backup.css"
 // import PropTypes from "prop-types"
 
-class Note extends Component {
+class NoteBackup extends Component {
   handleClickDelete = () => {
     this.props.delete(this.props.index)
   }
@@ -39,9 +39,9 @@ function inputIsRequired(props, propName, componentName) {
   return null
 }
 
-Note.propTypes = {
+NoteBackup.propTypes = {
   title: inputIsRequired,
   content: inputIsRequired
 }
 
-export default Note
+export default NoteBackup

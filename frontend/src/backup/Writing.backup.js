@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 
-class Writing extends Component {
+class WritingBackup extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -92,4 +92,4 @@ function WritingContent(props) {
   )
 }
 
-export default Writing
+export default WritingBackup
