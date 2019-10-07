@@ -1,0 +1,15 @@
+FROM python:3.7-slim    
+
+# 작업 영역 설정
+WORKDIR /app
+
+# 디렉토리 복사
+COPY ./backend /app/
+
+RUN pip install virtualenv
+RUN virtualenv venv
+RUN . venv/bin/activate
+RUN pip install -r requirements.txt
+RUN python manage.py migrate
+
+CMD [ "python", "manage.py", "runserver", "0:8000" ]
