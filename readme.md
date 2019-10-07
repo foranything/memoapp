@@ -23,6 +23,14 @@ python manage.py migrate
 python manage.py runserver
 ~~~
 
+#### docker
+
+docker build & run
+```sh
+>> sudo docker build -t <image-name> .
+>> sudo docker run -p <host-port>:<container-port> <image-name>
+```
+
 ### 2. frontend
 ##### 경로이동
 ~~~
@@ -34,4 +42,3 @@ yarn install
 yarn add axios
 yarn start
 ~~~
-
