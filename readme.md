@@ -27,8 +27,7 @@ python manage.py runserver
 
 docker build & run
 ```sh
->> sudo docker build -t <image-name> .
->> sudo docker run -p <host-port>:<container-port> <image-name>
+docker-compose up
 ```
 
 ### 2. frontend

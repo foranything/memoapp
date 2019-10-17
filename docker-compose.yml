@@ -1,0 +1,19 @@
+version: '3'
+
+volumes: 
+  memoapp: {}
+
+services:
+  djangoapp:
+    build: 
+      context: ./backend
+      dockerfile: ./compose/dockerfile
+    ports:
+      - "8000:8000"
+
+  reactapp:
+    build: 
+      context: ./frontend
+      dockerfile: ./compose/dockerfile
+    ports:
+      - "3000:3000"
