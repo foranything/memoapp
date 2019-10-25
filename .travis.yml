@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+- stable
+
+branches:
+  only:
+  - master
+  
+cache: yarn
+
+install:
+  - cd ./frontend
+  - yarn
+
+jobs:
+  include:
+    - script: yarn build
