@@ -31,6 +31,7 @@ class NoteApp extends Component {
           notes[index].title = savedNotes[index].title;
           notes[index].content = savedNotes[index].content;
           notes[index].password = savedNotes[index].password;
+          return null
         });
       }
       else {
